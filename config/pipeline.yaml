@@ -1,0 +1,24 @@
+meses_retroativos: 24
+bigquery_project: YOUR_PROJECT_ID
+bigquery_dataset_staging: staging_fundos
+bigquery_dataset_curated: curated_fundos
+gcs_bucket: your-bucket-name
+enable_b3_ingestion: false
+enable_mais_retorno_fallback: false
+b3_planilhas: []
+fundos:
+  - cnpj: "12345678000190"
+    nome: "Fundo Exemplo Master"
+    categoria_cvm: "Renda Fixa"
+    gestora: "Gestora Exemplo"
+    classe_anbima: "Soberano"
+    grupo_looker: "Grupo Institucional"
+  - cnpj: "98765432000100"
+    nome: "Fundo Imobiliário Alpha"
+    categoria_cvm: "FII"
+    gestora: "Gestora Imobiliária"
+    classe_anbima: "Tijolo"
+    grupo_looker: "Imobiliários"
+categorias_looker:
+  Renda Fixa: "RF"
+  FII: "Imobiliário"
