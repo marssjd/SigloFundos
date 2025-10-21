@@ -28,14 +28,19 @@ Se você está utilizando este ambiente hospedado (por exemplo, via navegador), 
    - Faça o download do arquivo `SigloFundos.zip` pelo recurso de transferência de arquivos da plataforma e descompacte localmente.
 
 3. **Publicar em um repositório seu**
-   - Crie um repositório vazio no GitHub.
-   - No terminal deste ambiente, execute:
+   - Crie (ou utilize) um repositório vazio no GitHub. Se você pretende usar o endereço `https://github.com/marssjd/SigloFundos.git`, crie esse repositório previamente na sua conta.
+   - No terminal **dentro do container** execute exatamente a sequência abaixo para publicar o código:
      ```bash
      cd /workspace/SigloFundos
-     git remote add origin https://github.com/<seu-usuario>/SigloFundos.git
+     git init
+     git add .
+     git commit -m "feat: pipeline mensal de ingestão"
+     git branch -M main
+     git remote add origin https://github.com/marssjd/SigloFundos.git
      git push -u origin main
      ```
-   - Em seguida, clone normalmente a partir do repositório que você acabou de criar.
+   - Se preferir outro nome de usuário ou repositório, substitua a URL na linha `git remote add origin ...` e repita o `git push`.
+   - Depois disso, você poderá clonar normalmente a partir do repositório que acabou de publicar.
 
 ## Configuração do ambiente
 
