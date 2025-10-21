@@ -1,0 +1,51 @@
+name: Monthly CVM Ingest
+
+on:
+  schedule:
+    - cron: "0 5 1 * *"
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    env:
+      BIGQUERY_PROJECT: ${{ secrets.BIGQUERY_PROJECT }}
+      BIGQUERY_DATASET_STAGING: ${{ secrets.BIGQUERY_DATASET_STAGING }}
+      BIGQUERY_DATASET_CURATED: ${{ secrets.BIGQUERY_DATASET_CURATED }}
+      GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Restore BigQuery credentials
+        run: |
+          echo "${{ secrets.BIGQUERY_SERVICE_ACCOUNT }}" > "$GOOGLE_APPLICATION_CREDENTIALS"
+
+      - name: Run ingestion (download + CSVs)
+        run: |
+          python -m data_pipeline.run_pipeline ingest --skip-bigquery
+
+      - name: Upload CSV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-csvs
+          path: output/
+
+      - name: Upload to BigQuery
+        env:
+          BIGQUERY_PROJECT: ${{ secrets.BIGQUERY_PROJECT }}
+          BIGQUERY_DATASET_STAGING: ${{ secrets.BIGQUERY_DATASET_STAGING }}
+          BIGQUERY_DATASET_CURATED: ${{ secrets.BIGQUERY_DATASET_CURATED }}
+        run: |
+          python -m data_pipeline.run_pipeline upload-bigquery

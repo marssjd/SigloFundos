@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+output/
+.tmp_pipeline/
+*.pyc
+.env
+.DS_Store
